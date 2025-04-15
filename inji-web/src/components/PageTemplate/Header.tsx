@@ -10,15 +10,25 @@ import { useSelector } from "react-redux";
 import { isRTL } from "../../utils/i18n";
 import { api } from "../../utils/api";
 import { useCookies } from 'react-cookie';
+import {BorderedButton} from "../Common/Buttons/BorderedButton";
+import { SolidButton } from "../Common/Buttons/SolidButton";
+import { useLocation } from "react-router-dom"; 
 
 
 export const Header: React.FC = () => {
+    const location = useLocation(); 
+    const [isHomePage, setIsHomePage] = useState<boolean>(location.pathname === "/");
+
     const language = useSelector((state: RootState) => state.common.language);
     const { t, i18n } = useTranslation("PageTemplate");
     const [isOpen, setIsOpen] = useState(false);
     const navigate = useNavigate();
     const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
     const [cookies] = useCookies(['XSRF-TOKEN']);
+
+    useEffect(() => {
+        setIsHomePage(location.pathname === "/"); 
+    }, [location.pathname]);
 
     useEffect(() => {
         const handleStorageChange = () => {
@@ -104,7 +114,7 @@ export const Header: React.FC = () => {
                         >
                             <img
                                 src={require("../../assets/InjiWebLogo.png")}
-                                className={`h-13 w-28 scale-150 cursor-pointer ${
+                                className={` fixed h-13 w-28 scale-150 cursor-pointer ${
                                     isRTL(language) ? "mr-4" : ""
                                 }`}
                                 data-testid="Header-InjiWeb-Logo"
@@ -114,43 +124,38 @@ export const Header: React.FC = () => {
                     </div>
                     <nav>
                         <ul
-                            className="flex space-x-10 items-center font-semibold"
+                            className="flex gap-0 items-center font-semibold"
                             data-testid="Header-Menu-Elements"
                         >
-                            <li data-testid="Header-Menu-Home">
-                                <div
-                                    data-testid="Header-Menu-Home-div"
-                                    onMouseDown={() => navigate("/")}
-                                    onKeyUp={() => navigate("/")}
-                                    role="button"
-                                    tabIndex={0}
-                                    className="text-iw-title cursor-pointer hidden sm:inline-block"
-                                >
-                                    {t("Header.home")}
-                                </div>
-                            </li>
-                            <li data-testid="Header-Menu-Help">
+                            {isHomePage && (
+                                <li data-testid=" Header-Menu-Help">
                                 <div
                                     className={" hidden sm:block font-semibold"}
                                     data-testid="Header-Menu-Help-div"
                                 >
                                     <HelpDropdown />
                                 </div>
-                            </li>
-                            <li data-testid="Header-Menu-Auth">
+                                </li>  
+                            )}
+
+                            <li>
                                 <div
-                                    data-testid="Header-Menu-Auth-div"
-                                    onMouseDown={handleAuthAction}
-                                    onKeyUp={handleAuthAction}
-                                    role="button"
-                                    tabIndex={0}
-                                    className="text-iw-title cursor-pointer hidden sm:inline-block"
+                                    className={"font-semibold"}
+                                    data-testid=" Header-Menu-LanguageSelector"
                                 >
-                                    {isLoggedIn
-                                        ? t("Header.logout")
-                                        : t("Header.login")}
+                                    <LanguageSelector />
                                 </div>
                             </li>
+
+                            {isHomePage && (
+                                <li data-testid="Header-Menu-Auth">
+                                    <SolidButton testId="Header-Menu-Auth-Button" onClick={(handleAuthAction)}
+                                         title={t("Header.login")} /> 
+                                </li>
+
+                            )}
+
+{/* This credential button below isn't part of the current design, might be  part of future design, so haven''t touched it. */}
                             {isLoggedIn && (
                                 <li data-testid="Header-Menu-View-Credentials">
                                     <div
@@ -169,15 +174,21 @@ export const Header: React.FC = () => {
                                     </div>
                                 </li>
                             )}
+
+                            {isHomePage && (
+                                <li>
+                                    <div data-testid="HomeBanner-ButtonContainer" className=" px-5 w-[100%] sm:w-56">
+                                    <BorderedButton testId="HomeBanner-Get-Started" onClick={() => navigate("/issuers")}
+                                    title={"Continue as Guest"} />
+                                    </div>
+                                </li>
+                            )}
                         </ul>
                     </nav>
-                    <div
-                        className={"font-semibold"}
-                        data-testid="Header-Menu-LanguageSelector"
-                    >
-                        <LanguageSelector />
-                    </div>
                 </div>
+
+              
+
                 {isOpen && (
                     <OutsideClickHandler
                         onOutsideClick={() => setIsOpen(false)}

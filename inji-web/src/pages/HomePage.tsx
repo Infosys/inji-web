@@ -28,7 +28,7 @@ export const HomePage: React.FC = () => {
     return (
         <div className={"pb-20 flex flex-col gap-y-4 "}>
             {displayName && <div className="greeting">Hi {displayName}</div>}
-            <HomeBanner onClick={() => navigate("/issuers")} />
+            <HomeBanner/>
             <HomeFeatures />
             <HomeQuickTip onClick={() => showToast(t("QuickTip.toastText"))} />
         </div>
