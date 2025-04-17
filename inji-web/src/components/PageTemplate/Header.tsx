@@ -150,13 +150,13 @@ export const Header: React.FC = () => {
                             {isHomePage && (
                                 <li data-testid="Header-Menu-Auth">
                                     <SolidButton testId="Header-Menu-Auth-Button" onClick={(handleAuthAction)}
-                                         title={t("Header.login")} /> 
+                                         title={ !isLoggedIn?t("Header.login"):t("Header.logout")} /> 
                                 </li>
 
                             )}
 
 {/* This credential button below isn't part of the current design, might be  part of future design, so haven''t touched it. */}
-                            {isLoggedIn && (
+                            {/* {isLoggedIn && (
                                 <li data-testid="Header-Menu-View-Credentials">
                                     <div
                                         data-testid="Header-Menu-View-Credentials-div"
@@ -173,9 +173,9 @@ export const Header: React.FC = () => {
                                         {"Credentials"}
                                     </div>
                                 </li>
-                            )}
+                            )} */}
 
-                            {isHomePage && (
+                            {isHomePage && !isLoggedIn && (
                                 <li>
                                     <div data-testid="HomeBanner-ButtonContainer" className=" px-5 w-[100%] sm:w-56">
                                     <BorderedButton testId="HomeBanner-Get-Started" onClick={() => navigate("/issuers")}

@@ -1,7 +1,8 @@
+import { FcGoogle } from "react-icons/fc";
 import React, {useState, useEffect} from "react";
 import {useNavigate} from "react-router-dom";
 import {api} from "../../../utils/api";
-
+import '../../../index.css'; 
 const Login: React.FC = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
@@ -25,6 +26,7 @@ const Login: React.FC = () => {
         } else if (status === "error") {
             setIsLoading(false);
             setError(params.get("error_message"));
+            window.location.replace("/failed-login"); 
         }
     }, [navigate]);
 
@@ -49,43 +51,46 @@ const Login: React.FC = () => {
                 setIsProfileFetched(true);
             } else {
                 setError(responseData.errorMessage);
+                window.location.replace("/failed-login"); 
                 throw responseData;
             }
         } catch (error) {
             console.error("Error occurred while fetching user profile:", error);
             setError("Failed to fetch user profile");
+            window.location.replace("/failed-login");
         }
     };
 
     useEffect(() => {
         if (isProfileFetched) {
-            window.location.replace("/pin");
+            window.location.replace("/successful-login");
         }
     }, [isProfileFetched, navigate]);
-
-    const containerStyle: React.CSSProperties = {
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "center",
-        alignItems: "center",
-        height: "100vh",
-        backgroundColor: "#f4f7fc"
-    };
-
-    const buttonStyle: React.CSSProperties = {
-        padding: "10px 20px",
+  
+    const wrapperStyle: React.CSSProperties = {
+        flexWrap: "nowrap", 
+        whiteSpace: "nowrap", 
+        padding: "24px 56px", 
+        backgroundColor: "#fff",
+        borderRadius: "16px",
         fontSize: "16px",
-        color: "white",
-        backgroundColor: "#4285f4",
-        border: "none",
-        borderRadius: "5px",
+        fontWeight: 500,
+        color: "#333",
         cursor: "pointer",
-        transition: "background-color 0.3s ease"
-    };
+        boxShadow: "0 4px 10px rgba(0, 0, 0, 0.05)",
+      };
 
-    const buttonHoverStyle: React.CSSProperties = {
-        ...buttonStyle,
-        backgroundColor: "#357ae8"
+      const buttonStyle: React.CSSProperties = {
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        gap: "10px",
+        backgroundColor: "#fff",
+        padding: "12px",
+        borderRadius: "10px", 
+        boxShadow: "0 4px 10px rgba(0, 0, 0, 0.05)",
+        border: "1px solid #ddd", 
+        minWidth: "320px",
     };
 
     const buttonDisabledStyle: React.CSSProperties = {
@@ -100,26 +105,54 @@ const Login: React.FC = () => {
         fontSize: "14px"
     };
 
+    const logowrapper: React.CSSProperties = {
+        paddingTop: "4%",
+        paddingBottom: "2%",
+        position: "relative",
+        width: "48px",
+        height: "48px",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        backgroundImage: `
+          radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 20%),
+          radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 40%),
+          radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 60%),
+          radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 80%)
+        `,
+        backgroundRepeat: "no-repeat",
+        backgroundPosition: "center",
+        backgroundSize: "100% 100%, 80% 80%, 60% 60%, 40% 40%",
+        borderRadius: "50%",
+      };
+
+      const logo: React.CSSProperties ={
+        zIndex: 1,
+        width: "48px",
+        height: "48px"
+      }
+
     return (
-        <div style={containerStyle}>
+        <div className="bg-auth">
+            <div style={logowrapper}>
+                <img  style={logo} data-testid={"LoginPageLogo"} src={require("../../../assets/Logomark.png")} alt="Inji Web Logo" />
+            </div>
+
+            <div data-testid={"to_be_given"} className="text-3xl text-black font-semibold w-[25%] text-center py-4">
+                Login to your Inji Web Account
+            </div>
+            <div data-testid="HomeBanner-Description" className="my-6 text-base font-light w-[30%] text-ellipsis text-center pb-4">
+                    Welcome to Inji Web! Choose a login option to create your profile.
+                </div>
+                
             <button
                 onClick={handleGoogleLogin}
                 disabled={isLoading}
-                style={isLoading ? buttonDisabledStyle : buttonStyle}
-                onMouseEnter={(e) => {
-                    if (!isLoading) {
-                        (e.target as HTMLElement).style.backgroundColor =
-                            "#357ae8";
-                    }
-                }}
-                onMouseLeave={(e) => {
-                    if (!isLoading) {
-                        (e.target as HTMLElement).style.backgroundColor =
-                            "#4285f4";
-                    }
-                }}
-            >
-                {isLoading ? "Logging in..." : "Login with Google"}
+                style={isLoading ? buttonDisabledStyle : wrapperStyle}
+            >   
+                <div style={buttonStyle}>
+                     <FcGoogle size={24} />{isLoading ? "Logging in..." : "Continue with Google"}
+                </div>
             </button>
             {error && <p style={errorStyle}>{error}</p>}
         </div>

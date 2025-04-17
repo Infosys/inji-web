@@ -20,7 +20,7 @@ export const HelpDropdown: React.FC = () => {
         <div className="relative inline-block ms-1">
             <button
                 type="button"
-                className="inline-flex items-center"
+                className="inline-flex text-base items-center"
                 data-testid={"HelpDropdown-Button"}
                 onMouseDown={() => setIsOpen(open => !isOpen)}>
                     <p data-testid={`Selected-DropDown`}>

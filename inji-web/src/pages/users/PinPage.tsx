@@ -1,199 +1,251 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import { api } from "../../utils/api";
-import { useCookies } from 'react-cookie';
+import { useCookies } from "react-cookie";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { SolidButton } from "../../components/Common/Buttons/SolidButton";
 
-const PinPage: React.FC = () => {
-    const [pin, setPin] = useState<string>("");
-    const [name, setName] = useState<string>("");
-    const [error, setError] = useState<string>("");
-    const [loading, setLoading] = useState<boolean>(false);
-    const [wallets, setWallets] = useState<any[]>([]);
-    const [isPinCorrect, setIsPinCorrect] = useState<boolean | null>(null);
-    const [walletId, setWalletId] = useState<string | null>(null);
-    const [cookies] = useCookies(["XSRF-TOKEN"]);
+export const PinPage: React.FC = () => {
+  const navigate = useNavigate();
+  const [name, setName] = useState<string>("");
+  const [error, setError] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(false);
+  const [wallets, setWallets] = useState<any[]>([]);
+  const [walletId, setWalletId] = useState<string | null>(null);
+  const [cookies] = useCookies(["XSRF-TOKEN"]);
+  
+  const [passcode, setPasscode] = useState<string[]>(Array(6).fill(""));
+  const [showPasscode, setShowPasscode] = useState(false);
 
-    useEffect(() => {
-        const fetchWallets = async () => {
-            try {
-                const response = await fetch(api.fetchWallets.url(), {
-                    method: api.fetchWallets.methodType === 0 ? "GET" : "POST",
-                    headers: api.fetchWallets.headers(),
-                    credentials: "include"
-                });
+  const [confirmPasscode, setConfirmPasscode] = useState<string[]>(Array(6).fill(""));
+  const [showConfirm, setShowConfirm] = useState(false);
 
-                const responseData = await response.json();
+  const [isPinCorrect, setIsPinCorrect] = useState<boolean | null>(null);
 
-                if (!response.ok) {
-                    throw new Error(responseData);
-                }
+// Auto focus - to switch focus automatically to next input box.
+  const passcodeRefs = useRef<(HTMLInputElement | null)[]>([]);
+  const confirmPasscodeRefs = useRef<(HTMLInputElement | null)[]>([]);
 
-                setWallets(responseData);
-                if (responseData.length > 0) {
-                    setWalletId(responseData[0].walletId);
-                    localStorage.setItem("walletId", responseData[0].walletId);
-                }
-            } catch (error) {
-                console.error("Error occurred while fetching wallets:", error);
-                setError("Failed to fetch wallets");
-            }
-        };
+  const handleInputChange = (
+    index: number,
+    value: string,
+    type: "passcode" | "confirm"
+  ) => {
+    if (!/\d/.test(value) && value !== "") return;
 
-        fetchWallets();
-    }, []);
+    const refs = type === "passcode" ? passcodeRefs : confirmPasscodeRefs;
+    const values = type === "passcode" ? [...passcode] : [...confirmPasscode];
+    values[index] = value;
 
-    const fetchWalletDetails = async (walletId: string, pin: string) => {
-        try {
-            const response = await fetch(api.fetchWalletDetails.url(walletId), {
-                method: api.fetchWalletDetails.methodType === 0 ? "GET" : "POST",
-                headers: {
-                    ...api.fetchWalletDetails.headers(),
-                    "X-XSRF-TOKEN": cookies["XSRF-TOKEN"]
-                },
-                credentials: "include",
-                body: JSON.stringify({ walletPin: pin })
-            });
+    if (type === "passcode") {
+      setPasscode(values);
+    } else {
+      setConfirmPasscode(values);
+    }
 
-            const responseData = await response.json();
-            if (!response.ok) {
-                throw responseData;
-            }
-            return responseData.walletId; // This line will give walletId in response if wallet details are fetched properly
-        } catch (error) {
-            console.error(
-                "Error occurred while fetching wallet details:",
-                JSON.stringify(error, null, 2)
-            );
-            throw error;
-        }
-    };
+    if (value && index < 5) {
+      refs.current[index + 1]?.focus();
+    }
+  };
 
-    const handleSubmit = async () => {
-        setError("");
-        setLoading(true);
-        setIsPinCorrect(null);
-
-        if (!pin) {
-            setError("Please enter a PIN.");
-            setLoading(false);
-            return;
-        }
-
-        try {
-            if (wallets.length === 0) {
-                if (!name) {
-                    setError("Please enter a name.");
-                    setLoading(false);
-                    return;
-                }
-                // No wallets found, create a new wallet
-                const response = await fetch(api.createWalletWithPin.url(), {
-                    method: "POST",
-                    headers: {
-                        ...api.createWalletWithPin.headers(),
-                        "Content-Type": "application/json",
-                        "X-XSRF-TOKEN": cookies["XSRF-TOKEN"]
-                    },
-                    credentials: "include",
-                    body: JSON.stringify({ walletPin: pin, walletName: name })
-                });
-
-                if (!response.ok) {
-                    const errorData = await response.json();
-                    console.error(
-                        "Error occurred while creating wallet:",
-                        errorData
-                    );
-                    setError(
-                        `Failed to create wallet: ${errorData.errorMessage || "Unknown error"}`
-                    );
-                    setIsPinCorrect(false);
-                    return;
-                }
-
-                const walletId = await response.text();
-                setWalletId(walletId);
-                setWallets([{ walletId }]); // Update wallets state to reflect the new wallet
-
-                setIsPinCorrect(true);
-                setError(`Wallet created successfully! Wallet ID: ${walletId}`);
-                localStorage.setItem("walletId", walletId);
-            } else {
-                const walletData = await fetchWalletDetails(walletId!, pin);
-                console.log("wallet data::", walletData);
-                setIsPinCorrect(true);
-                localStorage.setItem("walletId", walletData);
-            }
-        } catch (error) {
-            setIsPinCorrect(false);
-            setError("An error occurred. Please try again.");
-            console.error("An error occurred while creating wallet:", error);
-            localStorage.removeItem("walletId");
-        } finally {
-            setLoading(false);
-        }
-    };
+  const renderInputs = (
+    type: "passcode" | "confirm",
+    visible: boolean,
+    toggleVisibility: () => void
+  ) => {
+    const values = type === "passcode" ? passcode : confirmPasscode;
+    const refs = type === "passcode" ? passcodeRefs : confirmPasscodeRefs;
+      const logo: React.CSSProperties ={
+        zIndex: 1,
+        width: "48px",
+        height: "48px"
+      }
 
     return (
-        <div className="pin-container">
-            {wallets.length > 0 ? (
-                <>
-                    <br />
-                    <br />
-                    <h2>Unlock Wallet : {walletId}</h2>
-                    <h3>Enter PIN</h3>
-                    <input
-                        type="password"
-                        placeholder="Enter your PIN"
-                        value={pin}
-                        onChange={(e) => setPin(e.target.value)}
-                        disabled={loading}
-                    />
-                </>
-            ) : (
-                <>
-                    <br />
-                    <br />
-                    <h2>Create Wallet</h2>
-                    <h3>Enter Name and PIN</h3>
-                    <input
-                        type="text"
-                        placeholder="Enter your Name"
-                        value={name}
-                        onChange={(e) => setName(e.target.value)}
-                        disabled={loading}
-                    />
-                    <br />
-                    <br />
-                    <input
-                        type="password"
-                        placeholder="Enter your PIN"
-                        value={pin}
-                        onChange={(e) => setPin(e.target.value)}
-                        disabled={loading}
-                    />
-                </>
-            )}
-            <br />
-            <br />
-            <button onClick={handleSubmit} disabled={loading}>
-                {loading ? "Submitting..." : "Submit"}
-            </button>
-
-            {error && <p className="error-message">{error}</p>}
-
-            {isPinCorrect !== null && (
-                <p
-                    className={
-                        isPinCorrect ? "success-message" : "error-message"
-                    }
-                >
-                    {isPinCorrect
-                        ? "PIN is correct! Wallet data fetched successfully."
-                        : "Incorrect PIN. Please try again."}
-                </p>
-            )}
-        </div>
+      <div className="flex items-center gap-2">
+        {values.map((digit, idx) => (
+          <input
+            key={idx}
+            ref={(el) => (refs.current[idx] = el)}
+            type={visible ? "text" : "password"}
+            inputMode="numeric"
+            maxLength={1}
+            value={digit}
+            onChange={(e) => handleInputChange(idx, e.target.value, type)}
+            className="w-12 h-12 text-center border border-gray-300 rounded-lg text-lg"
+          />
+        ))}
+        <button type="button" onClick={toggleVisibility} className="px-5">
+          {visible ? <FaEyeSlash /> : <FaEye />}
+        </button>
+      </div>
     );
+  };
+
+  useEffect(() => {
+    const fetchWallets = async () => {
+      try {
+        const response = await fetch(api.fetchWallets.url(), {
+          method: api.fetchWallets.methodType === 0 ? "GET" : "POST",
+          headers: api.fetchWallets.headers(),
+          credentials: "include"
+        });
+
+        const responseData = await response.json();
+
+        if (!response.ok) {
+          throw new Error(responseData);
+        }
+
+        setWallets(responseData);
+        if (responseData.length > 0) {
+          setWalletId(responseData[0].walletId);
+          localStorage.setItem("walletId", responseData[0].walletId);
+        }
+      } catch (error) {
+        console.error("Error occurred while fetching wallets:", error);
+        setError("Failed to fetch wallets");
+      }
+    };
+
+    fetchWallets();
+  }, []);
+
+  const fetchWalletDetails = async (walletId: string, pin: string) => {
+    try {
+      const response = await fetch(api.fetchWalletDetails.url(walletId), {
+        method: api.fetchWalletDetails.methodType === 0 ? "GET" : "POST",
+        headers: {
+          ...api.fetchWalletDetails.headers(),
+          "X-XSRF-TOKEN": cookies["XSRF-TOKEN"]
+        },
+        credentials: "include",
+        body: JSON.stringify({ walletPin: pin })
+      });
+
+      const responseData = await response.json();
+      if (!response.ok) {
+        throw responseData;
+      }
+      return responseData.walletId;
+    } catch (error) {
+      console.error("Error occurred while fetching wallet details:", error);
+      throw error;
+    }
+  };
+
+  const handleSubmit = async () => {
+    setError("");
+    setLoading(true);
+    setIsPinCorrect(null);
+
+    const pin = passcode.join("");
+    const confirmPin = confirmPasscode.join("");
+
+    if (pin.length !== 6 || confirmPin.length !== 6) {
+      setError("Please fill out all 6 digits of both passcodes.");
+      setLoading(false);
+      return;
+    }
+
+    if (pin !== confirmPin) {
+      setError("Passcodes do not match.");
+      setLoading(false);
+      return;
+    }
+
+    try {
+      if (wallets.length === 0) {
+        if (!name) {
+          setError("Please enter your name.");
+          setLoading(false);
+          return;
+        }
+
+        const response = await fetch(api.createWalletWithPin.url(), {
+          method: "POST",
+          headers: {
+            ...api.createWalletWithPin.headers(),
+            "Content-Type": "application/json",
+            "X-XSRF-TOKEN": cookies["XSRF-TOKEN"]
+          },
+          credentials: "include",
+          body: JSON.stringify({ walletPin: pin, walletName: name })
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          setError(`Failed to create wallet: ${errorData.errorMessage || "Unknown error"}`);
+          setIsPinCorrect(false);
+          return;
+        }
+
+        const newWalletId = await response.text();
+        setWalletId(newWalletId);
+        setWallets([{ walletId: newWalletId }]);
+        setIsPinCorrect(true);
+        localStorage.setItem("walletId", newWalletId);
+        navigate("/issuers");
+      } else {
+        const walletData = await fetchWalletDetails(walletId!, pin);
+        setIsPinCorrect(true);
+        localStorage.setItem("walletId", walletData);
+        navigate("/issuers");
+      }
+    } catch (error) {
+      setIsPinCorrect(false);
+      setError("Incorrect PIN. Please try again.");
+      localStorage.removeItem("walletId");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="bg-auth min-h-screen flex flex-col items-center justify-center">
+      <div className="text-center mb-6">
+        <div className="ps-20 px-2">
+          <img src={require("../../assets/Logomark.png")} alt="Inji Web Logo"/>
+        </div>
+        <h1 className="text-2xl font-semibold text-gray-800 p-2 ">
+            {wallets.length==0 ?" Set Passcode": "Enter Passcode"} 
+        </h1>
+        <p className="text-gray-600">Create your 6 digit passcode</p>
+      </div>
+
+      <div className="bg-white rounded-xl shadow-md p-6 w-full max-w-md text-center">
+        <p className="mb-4 text-gray-500 text-sm">
+          Make sure you remember the passcode for future login
+        </p>
+        {wallets.length === 0 && (
+          <div className="mb-4">
+            <p className="text-sm text-left font-medium text-gray-700 mb-1">Enter Name</p>
+            <input
+              type="text"
+              placeholder="Your Name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              className="w-full border border-gray-300 rounded-lg px-3 py-2"
+            />
+          </div>
+        )}
+
+        <div className="mb-4">
+          <p className="text-sm text-left font-medium text-gray-700 mb-1">Enter Passcode</p>
+          {renderInputs("passcode", showPasscode, () => setShowPasscode((prev) => !prev))}
+        </div>
+
+        <div className="mb-4">
+          <p className="text-sm text-left font-medium text-gray-700 mb-1">Confirm Passcode</p>
+          {renderInputs("confirm", showConfirm, () => setShowConfirm((prev) => !prev))}
+        </div>
+
+        {error && <p className="text-red-600 text-sm mb-3">{error}</p>}
+        <SolidButton testId="Header-Menu-Auth-Button" onClick={handleSubmit}
+            title={loading ? "Submitting..." : "Submit"} /> 
+      </div>
+    </div>
+  );
 };
 
-export default PinPage;
+export default PinPage

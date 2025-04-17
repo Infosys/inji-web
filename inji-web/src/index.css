@@ -103,4 +103,25 @@
         background-size: 100% 100%;
         background-position: center;
     }
+    .bg-auth {
+        position: fixed; /* Lock the container to the viewport */
+        top: 0;
+        left: 0;
+        width: 100vw; /* Full width of the viewport */
+        height: 100vh; /* Exactly one screen tall */
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: center;
+        padding-top: 15vh;
+        overflow: hidden;   
+        background: linear-gradient(
+            to bottom,
+            #efe7f7 10%,
+            #fcefed 25%,
+            #fdfdfd 55%,
+            #fcefed 63%,
+            #efe7f7 100%
+        );
+    }
 }
