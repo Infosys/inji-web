@@ -12,12 +12,12 @@ const Login: React.FC = () => {
   const [isProfileFetched, setIsProfileFetched] = useState(false);
   const navigate = useNavigate();
 
-  const handleGoogleLogin = () => {
-    setIsLoading(true);
-    setError(null);
-    window.location.href =
-      "http://localhost:8099/v1/mimoto/oauth2/authorize/google";
-  };
+    const handleGoogleLogin = () => {
+        setIsLoading(true);
+        setError(null);
+        window.location.href =
+            window._env_.MIMOTO_HOST + "/oauth2/authorize/google";
+    };
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
