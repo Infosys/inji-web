@@ -86,7 +86,7 @@ export const Header: React.FC = () => {
         <header>
             <div
                 data-testid="Header-Container"
-                className="fixed top-0 left-0 right-0 bg-iw-background py-7 z-10"
+                className="fixed top-0 left-0 right-0 bg-iw-background py-5 z-10"
             >
                 <div className="container mx-auto flex justify-between items-center px-4">
                     <div
@@ -179,7 +179,7 @@ export const Header: React.FC = () => {
                                 <li>
                                     <div data-testid="HomeBanner-ButtonContainer" className=" px-5 w-[100%] sm:w-56">
                                     <BorderedButton testId="HomeBanner-Get-Started" onClick={() => navigate("/issuers")}
-                                    title={"Continue as Guest"} />
+                                    title={t("Header.guest")} />
                                     </div>
                                 </li>
                             )}

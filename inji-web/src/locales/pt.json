@@ -1,9 +1,11 @@
 {
   "PageTemplate": {
     "Header": {
-      "home": "Página inicial",
-      "help": "Ajuda"
-    },
+    "help": "Ajuda",
+    "login": "Entrar",
+    "logout": "Sair",
+    "guest": "Continuar como convidado"
+  },
     "Footer": {
       "product": "Um produto MOSIP",
       "copyRight": "© 2024 MOSIP. Todos os direitos reservados."
@@ -267,6 +269,41 @@
       "description2":"1. EmbeddedVC: incorpora o VC completo no formato JSON (código QR mais denso) para uso offline.",
       "description3":"2. OnlineSharing: gera um código QR com uma URL para o armazenamento de VC online, facilitando a digitalização e o compartilhamento online."
     }
+  },
+  "LoginPage": {
+    "login-title": "Faça login na sua conta Inji Web",
+    "login-description": "Bem-vindo ao Inji Web! Escolha uma opção de login para criar seu perfil.",
+    "continue-with-google": "Continuar com o Google",
+    "logging-in": "Fazendo login...",
+    "login-error": "Falha ao buscar o perfil do usuário"
+  },
+  "PinPage": {
+    "fetch-wallets-error": "Falha ao buscar carteiras",
+    "pin-length-error": "Por favor, preencha todos os 6 dígitos de ambos os códigos PIN.",
+    "passcode-mismatch-error": "Seu código PIN não corresponde!",
+    "enter-name-error": "Por favor, insira seu nome.",
+    "create-wallet-error": "Falha ao criar carteira",
+    "unknown-error": "Erro desconhecido",
+    "incorrect-pin-error": "PIN incorreto. Tente novamente.",
+    "set-passcode": "Definir código PIN",
+    "enter-passcode": "Digite o código PIN",
+    "pin-description": "Crie seu código PIN de 6 dígitos",
+    "pin-warning": "Certifique-se de lembrar o código PIN para login futuro",
+    "enter-name": "Insira o nome",
+    "placeholder-name": "Seu nome",
+    "confirm-passcode": "Confirmar código PIN",
+    "submitting": "Enviando...",
+    "submit": "Enviar"
+  },
+  "SuccessLoginPage": {
+    "successful-login": "Sucesso!",
+    "login-success-message": "Você completou o login com sucesso! Por favor, clique em continuar para configurar seu código PIN.",
+    "proceed": "Continuar"
+  },
+  "FailedLogin": {
+    "failure-message": "Falha no login!",
+    "failure-description": "Sua solicitação de login não pôde ser concluída. Por favor, clique no botão tentar novamente para fazer o login novamente.",
+    "retry": "Tentar novamente"
   },
   "DataShareExpiryModal": {
     "title": "Compartilhar Validade",

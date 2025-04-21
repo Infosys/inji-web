@@ -1,11 +1,14 @@
+import { FaExclamationCircle } from "react-icons/fa";
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { api } from "../../utils/api";
 import { useCookies } from "react-cookie";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { SolidButton } from "../../components/Common/Buttons/SolidButton";
+import { useTranslation } from "react-i18next";
 
 export const PinPage: React.FC = () => {
+  const { t, i18n } = useTranslation("PinPage");
   const navigate = useNavigate();
   const [name, setName] = useState<string>("");
   const [error, setError] = useState<string>("");
@@ -22,7 +25,6 @@ export const PinPage: React.FC = () => {
 
   const [isPinCorrect, setIsPinCorrect] = useState<boolean | null>(null);
 
-// Auto focus - to switch focus automatically to next input box.
   const passcodeRefs = useRef<(HTMLInputElement | null)[]>([]);
   const confirmPasscodeRefs = useRef<(HTMLInputElement | null)[]>([]);
 
@@ -45,7 +47,7 @@ export const PinPage: React.FC = () => {
 
     if (value && index < 5) {
       refs.current[index + 1]?.focus();
-    }
+    } 
   };
 
   const renderInputs = (
@@ -55,12 +57,7 @@ export const PinPage: React.FC = () => {
   ) => {
     const values = type === "passcode" ? passcode : confirmPasscode;
     const refs = type === "passcode" ? passcodeRefs : confirmPasscodeRefs;
-      const logo: React.CSSProperties ={
-        zIndex: 1,
-        width: "48px",
-        height: "48px"
-      }
-
+    
     return (
       <div className="flex items-center gap-2">
         {values.map((digit, idx) => (
@@ -72,7 +69,12 @@ export const PinPage: React.FC = () => {
             maxLength={1}
             value={digit}
             onChange={(e) => handleInputChange(idx, e.target.value, type)}
-            className="w-12 h-12 text-center border border-gray-300 rounded-lg text-lg"
+            onKeyDown={(e) => {
+              if (e.key === 'Backspace' && idx > 0 && !digit) {
+                refs.current[idx - 1]?.focus();
+              }
+            }}
+            className="w-10 h-10 text-center border border-gray-300 rounded-sm text-sm"
           />
         ))}
         <button type="button" onClick={toggleVisibility} className="px-5">
@@ -104,7 +106,7 @@ export const PinPage: React.FC = () => {
         }
       } catch (error) {
         console.error("Error occurred while fetching wallets:", error);
-        setError("Failed to fetch wallets");
+        setError(t("fetch-wallets-error"));
       }
     };
 
@@ -138,26 +140,33 @@ export const PinPage: React.FC = () => {
     setError("");
     setLoading(true);
     setIsPinCorrect(null);
-
     const pin = passcode.join("");
-    const confirmPin = confirmPasscode.join("");
+   
+    if(wallets.length !== 0) {
+      if(pin.length !== 6){
+        setError(t("pin-length-error"));
+        setLoading(false);
+        return;
+      }
+    } else {       
+      const confirmPin = confirmPasscode.join("");
+      if (pin.length !== 6 || confirmPin.length !== 6) {
+        setError(t("pin-length-error"));
+        setLoading(false);
+        return;
+      }
 
-    if (pin.length !== 6 || confirmPin.length !== 6) {
-      setError("Please fill out all 6 digits of both passcodes.");
-      setLoading(false);
-      return;
-    }
-
-    if (pin !== confirmPin) {
-      setError("Passcodes do not match.");
-      setLoading(false);
-      return;
+      if (wallets.length === 0 && pin !== confirmPin) {
+        setError(t("passcode-mismatch-error"));
+        setLoading(false);
+        return;
+      }  
     }
 
     try {
       if (wallets.length === 0) {
         if (!name) {
-          setError("Please enter your name.");
+          setError(t("enter-name-error"));
           setLoading(false);
           return;
         }
@@ -175,7 +184,7 @@ export const PinPage: React.FC = () => {
 
         if (!response.ok) {
           const errorData = await response.json();
-          setError(`Failed to create wallet: ${errorData.errorMessage || "Unknown error"}`);
+          setError(`${t("create-wallet-error")}: ${errorData.errorMessage || t("unknown-error")}`);
           setIsPinCorrect(false);
           return;
         }
@@ -194,58 +203,77 @@ export const PinPage: React.FC = () => {
       }
     } catch (error) {
       setIsPinCorrect(false);
-      setError("Incorrect PIN. Please try again.");
+      setError(t("incorrect-pin-error"));
       localStorage.removeItem("walletId");
     } finally {
       setLoading(false);
     }
   };
 
+  const isButtonDisabled = passcode.includes("") || (wallets.length === 0 && confirmPasscode.includes(""));
   return (
-    <div className="bg-auth min-h-screen flex flex-col items-center justify-center">
-      <div className="text-center mb-6">
-        <div className="ps-20 px-2">
+    <div className="bg-auth min-h-screen flex flex-col items-center justify-center pt-1" data-testid="pin-page">
+      <div className="text-center mb-2">
+        <div className="ps-20" data-testid="pin-logo">
           <img src={require("../../assets/Logomark.png")} alt="Inji Web Logo"/>
         </div>
-        <h1 className="text-2xl font-semibold text-gray-800 p-2 ">
-            {wallets.length==0 ?" Set Passcode": "Enter Passcode"} 
+        <h1 className="text-2xl font-semibold text-gray-800 p-4 " data-testid="pin-title">
+            {wallets.length === 0 ? t("set-passcode") : t("enter-passcode")}
         </h1>
-        <p className="text-gray-600">Create your 6 digit passcode</p>
+        <p className="text-gray-600 text-md" data-testid="pin-description">
+          {t("pin-description")}
+        </p>
       </div>
 
-      <div className="bg-white rounded-xl shadow-md p-6 w-full max-w-md text-center">
-        <p className="mb-4 text-gray-500 text-sm">
-          Make sure you remember the passcode for future login
+      <div className="bg-white rounded-lg shadow-sm p-6 max-w-sm text-center" data-testid="pin-container">
+        <p className="text-center mx-10 my-2 w-[85%] text-gray-500 text-sm" data-testid="pin-warning">
+          {t("pin-warning")}
         </p>
+        {error && 
+        <div className="bg-red-100 border border-red-300 text-red-700 px-4 py-2 rounded-lg mb-4 flex items-center justify-between" data-testid="pin-error">
+          <div className="flex items-center gap-2">
+            <FaExclamationCircle className="text-red-500 w-4 h-4" />
+            <span className="w-full text-xs">{error}</span>
+          </div>
+        </div>
+        }
+
         {wallets.length === 0 && (
-          <div className="mb-4">
-            <p className="text-sm text-left font-medium text-gray-700 mb-1">Enter Name</p>
+          <div className="mb-2" data-testid="pin-name-input">
+            <p className="text-sm text-left text-gray-700 mb-1">{t("enter-name")}</p>
             <input
               type="text"
-              placeholder="Your Name"
+              placeholder={t("placeholder-name")}
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="w-full border border-gray-300 rounded-lg px-3 py-2"
+              className="w-full border border-gray-300 rounded-lg px-2 py-1"
             />
           </div>
         )}
 
-        <div className="mb-4">
-          <p className="text-sm text-left font-medium text-gray-700 mb-1">Enter Passcode</p>
+        <div className="mb-2" data-testid="pin-passcode-input">
+          <p className="text-sm text-left font-small text-gray-700 mb-1">{t("enter-passcode")}</p>
           {renderInputs("passcode", showPasscode, () => setShowPasscode((prev) => !prev))}
         </div>
 
-        <div className="mb-4">
-          <p className="text-sm text-left font-medium text-gray-700 mb-1">Confirm Passcode</p>
-          {renderInputs("confirm", showConfirm, () => setShowConfirm((prev) => !prev))}
-        </div>
+        {wallets.length === 0 && (
+          <div className="mb-2" data-testid="pin-confirm-passcode-input">
+            <p className="text-sm text-left font-small text-gray-700 mb-1">{t("confirm-passcode")}</p>
+            {renderInputs("confirm", showConfirm, () => setShowConfirm((prev) => !prev))}
+          </div>
+        )}
 
-        {error && <p className="text-red-600 text-sm mb-3">{error}</p>}
-        <SolidButton testId="Header-Menu-Auth-Button" onClick={handleSubmit}
-            title={loading ? "Submitting..." : "Submit"} /> 
+        <SolidButton
+          fullWidth={true}
+          testId="pin-submit-button"
+          onClick={handleSubmit}
+          title={loading ? t("submitting") : t("submit")}
+          disabled={isButtonDisabled}
+          className={`${isButtonDisabled ? 'grayscale' : ''}`}
+        />
       </div>
     </div>
   );
 };
 
-export default PinPage
+export default PinPage;

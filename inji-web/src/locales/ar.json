@@ -1,9 +1,11 @@
 {
   "PageTemplate": {
     "Header": {
-      "home": "الصفحة الرئيسية",
-      "help": "مساعدة"
-    },
+    "help": "مساعدة",
+    "login": "تسجيل الدخول",
+    "logout": "تسجيل الخروج",
+    "guest": "المتابعة كزائر"
+  },
     "Footer": {
       "product": "منتج MOSIP",
       "copyRight": "© 2024 MOSIP. جميع الحقوق محفوظة."
@@ -275,6 +277,41 @@
       "description2": "1. Embedded VC: يقوم بتضمين VC بالكامل بتنسيق JSON (رمز QR أكثر كثافة) للاستخدام دون اتصال بالإنترنت .",
       "description3": "2. OnlineSharing: إنشاء رمز QR مع عنوان URL لتخزين VC عبر الإنترنت، مما يجعل من السهل مسحه ومشاركته عبر الإنترنت."
     }
+  },
+  "LoginPage": {
+    "login-title": "تسجيل الدخول إلى حسابك في إنجي ويب",
+    "login-description": "مرحبًا بك في إنجي ويب! اختر خيار تسجيل الدخول لإنشاء ملفك الشخصي.",
+    "continue-with-google": "مواصلة باستخدام Google",
+    "logging-in": "جاري تسجيل الدخول...",
+    "login-error": "فشل في جلب ملف المستخدم"
+  },
+  "PinPage": {
+    "fetch-wallets-error": "فشل في جلب المحفظات",
+    "pin-length-error": "يرجى إدخال جميع الأرقام الـ 6 لكل من رمزي المرور.",
+    "passcode-mismatch-error": "رمز المرور غير متطابق!",
+    "enter-name-error": "يرجى إدخال اسمك.",
+    "create-wallet-error": "فشل في إنشاء المحفظة",
+    "unknown-error": "خطأ غير معروف",
+    "incorrect-pin-error": "رمز PIN غير صحيح. يرجى المحاولة مرة أخرى.",
+    "set-passcode": "تعيين رمز المرور",
+    "enter-passcode": "أدخل رمز المرور",
+    "pin-description": "أنشئ رمز مرور مكون من 6 أرقام",
+    "pin-warning": "تأكد من تذكر رمز المرور لتسجيل الدخول مستقبلاً",
+    "enter-name": "أدخل الاسم",
+    "placeholder-name": "اسمك",
+    "confirm-passcode": "تأكيد رمز المرور",
+    "submitting": "جارٍ الإرسال...",
+    "submit": "إرسال"
+  },
+  "SuccessLoginPage": {
+    "successful-login": "تم بنجاح!",
+    "login-success-message": "لقد أكملت تسجيل الدخول بنجاح! يرجى النقر على المتابعة لإعداد رمز المرور الخاص بك.",
+    "proceed": "متابعة"
+  },
+  "FailedLogin": {
+    "failure-message": "فشل تسجيل الدخول!",
+    "failure-description": "لم يتمكن طلب تسجيل الدخول الخاص بك من الإكمال. يرجى النقر على زر إعادة المحاولة لتسجيل الدخول مرة أخرى.",
+    "retry": "إعادة المحاولة"
   },
   "DataShareExpiryModal": {
     "title": "صلاحية المشاركة",

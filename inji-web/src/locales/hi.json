@@ -1,9 +1,11 @@
 {
   "PageTemplate": {
     "Header": {
-      "home": "घर",
-      "help": "मदद"
-    },
+    "help": "सहायता",
+    "login": "लॉगिन",
+    "logout": "लॉगआउट",
+    "guest": "मेहमान के रूप में जारी रखें"
+  },
     "Footer": {
       "product": "एक MOSIP उत्पाद",
       "copyRight": "© 2024 MOSIP. सभी अधिकार सुरक्षित।"
@@ -275,6 +277,41 @@
       "description2":"1. EmbeddedVC: ऑफ़लाइन उपयोग के लिए JSON फ़ॉर्मेट (घने QR कोड) में पूर्ण VC एम्बेड करता है।",
       "description3":"2. OnlineSharing: ऑनलाइन VC स्टोरेज के लिए URL के साथ एक QR कोड जेनरेट करता है, जिससे इसे स्कैन करना और ऑनलाइन शेयर करना आसान हो जाता है।"
     }
+  },
+  "LoginPage": {
+    "login-title": "अपने इंजी वेब खाते में लॉगिन करें",
+    "login-description": "इंजी वेब में आपका स्वागत है! अपनी प्रोफ़ाइल बनाने के लिए एक लॉगिन विकल्प चुनें।",
+    "continue-with-google": "Google के साथ जारी रखें",
+    "logging-in": "लॉगिन हो रहा है...",
+    "login-error": "उपयोगकर्ता प्रोफ़ाइल प्राप्त करने में विफल"
+  },
+  "PinPage": {
+    "fetch-wallets-error": "वॉलेट्स प्राप्त करने में विफल",
+    "pin-length-error": "कृपया दोनों पासकोड के सभी 6 अंक भरें।",
+    "passcode-mismatch-error": "आपका पासकोड मेल नहीं खा रहा है!",
+    "enter-name-error": "कृपया अपना नाम दर्ज करें।",
+    "create-wallet-error": "वॉलेट बनाने में विफल",
+    "unknown-error": "अज्ञात त्रुटि",
+    "incorrect-pin-error": "गलत पिन। कृपया फिर से प्रयास करें।",
+    "set-passcode": "पासकोड सेट करें",
+    "enter-passcode": "पासकोड दर्ज करें",
+    "pin-description": "अपना 6 अंकों का पासकोड बनाएं",
+    "pin-warning": "भविष्य में लॉगिन करने के लिए पासकोड याद रखें",
+    "enter-name": "नाम दर्ज करें",
+    "placeholder-name": "आपका नाम",
+    "confirm-passcode": "पासकोड की पुष्टि करें",
+    "submitting": "जमा किया जा रहा है...",
+    "submit": "जमा करें"
+  },
+  "SuccessLoginPage": {
+    "successful-login": "सफल!",
+    "login-success-message": "आपने सफलतापूर्वक लॉगिन पूरा कर लिया है! कृपया अपना पासकोड सेट करने के लिए आगे बढ़ने के लिए क्लिक करें।",
+    "proceed": "आगे बढ़ें"
+  },
+  "FailedLogin": {
+    "failure-message": "लॉगिन विफल!",
+    "failure-description": "आपका लॉगिन अनुरोध पूरा नहीं किया जा सका। कृपया फिर से लॉगिन करने के लिए रिट्री बटन पर क्लिक करें।",
+    "retry": "पुनः प्रयास करें"
   },
   "DataShareExpiryModal": {
     "title": "वैधता साझा करें",

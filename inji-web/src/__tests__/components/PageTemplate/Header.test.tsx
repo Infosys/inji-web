@@ -51,7 +51,7 @@ describe("Testing Header Container Functionality", () => {
         ]);
         renderWithProvider(<Header />);
         const headerElementLi = screen.getByTestId("Header-Menu-Elements");
-        expect(headerElementLi.children.length).toBe(3);
+        expect(headerElementLi.children.length).toBe(4);
     });
 
     // Uncomment and fix these tests if needed

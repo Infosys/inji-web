@@ -1,10 +1,10 @@
 {
   "PageTemplate": {
     "Header": {
-      "home": "Home",
       "help": "Help",
       "login": "Login",
-      "logout": "Logout"
+      "logout": "Logout",
+      "guest": "Continue as Guest"
     },
     "Footer": {
       "product": "A MOSIP Product",
@@ -277,6 +277,41 @@
       "description2":"1. EmbeddedVC: Embeds the full VC in JSON format (denser QR code) for offline use.",
       "description3":"2. OnlineSharing: Generates a QR code with a URL to the online VC storage, making it easier to scan and share online."
     }
+  },
+  "LoginPage": {
+    "login-title": "Login to your Inji Web Account",
+    "login-description": "Welcome to Inji Web! Choose a login option to create your profile.",
+    "continue-with-google": "Continue with Google",
+    "logging-in": "Logging in...",
+    "login-error": "Failed to fetch user profile"
+  },
+  "PinPage": {
+    "fetch-wallets-error": "Failed to fetch wallets",
+    "pin-length-error": "Please fill out all 6 digits of both passcodes.",
+    "passcode-mismatch-error": "Your Passcode is not matching!",
+    "enter-name-error": "Please enter your name.",
+    "create-wallet-error": "Failed to create wallet",
+    "unknown-error": "Unknown error",
+    "incorrect-pin-error": "Incorrect PIN. Please try again.",
+    "set-passcode": "Set Passcode",
+    "enter-passcode": "Enter Passcode",
+    "pin-description": "Create your 6 digit passcode",
+    "pin-warning": "Make sure you remember the passcode for future login",
+    "enter-name": "Enter Name",
+    "placeholder-name": "Your Name",
+    "confirm-passcode": "Confirm Passcode",
+    "submitting": "Submitting...",
+    "submit": "Submit"
+  },
+  "SuccessLoginPage": {
+    "successful-login": "Successful!",
+    "login-success-message": "You have successfully completed your Login! Please click on proceed to setup your passcode.",
+    "proceed": "Proceed"
+  },
+  "FailedLogin": {
+    "failure-message": "Login Failed!",
+    "failure-description": "Your login request could not be completed. Please click on the retry button to login again.",
+    "retry": "Retry"
   },
   "DataShareExpiryModal": {
     "title": "Share Validity",

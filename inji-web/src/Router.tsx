@@ -12,8 +12,8 @@ import {getDirCurrentLanguage} from "./utils/i18n";
 import {PageNotFound} from "./pages/PageNotFound";
 import {AuthorizationPage} from "./pages/AuthorizationPage";
 import {HomePage} from "./pages/HomePage";
-import {SuccessfulLoginPage} from "./pages/users/login/SuccessfulLoginPage"; // Add this import
-import { FailedLoginPage } from "./pages/users/login/FailedLoginPage";
+import {SuccessLoginPage} from "./pages/users/login/SuccessLoginPage"; // Add this import
+import {FailedLoginPage } from "./pages/users/login/FailedLoginPage";
 import Login from "./pages/users/login/Login";
 import LoginSessionStatusChecker from "./pages/users/login/LoginSessionStatusChecker";
 import PinForm from './pages/users/PinPage'
@@ -63,7 +63,7 @@ export const AppRouter = () => {
                 />
                 <Route path="/login" element={wrapElement(<Login />)} />
                 <Route path="/pin" element={wrapElement(<PinForm/>)}/>
-                <Route path="/successful-login" element={wrapElement(<SuccessfulLoginPage />)} />
+                <Route path="/successful-login" element={wrapElement(<SuccessLoginPage />)} />
                 <Route path="/failed-login" element={wrapElement(<FailedLoginPage />)} />
                 <Route path="/view/wallet/credentials" element={wrapElement(<WalletCredentialsPage/>)}/>
                 <Route path="/*" element={wrapElement(<PageNotFound />)} />

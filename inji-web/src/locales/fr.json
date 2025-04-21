@@ -1,9 +1,11 @@
 {
   "PageTemplate": {
     "Header": {
-      "home": "Accueil",
-      "help": "Aide"
-    },
+    "help": "Aide",
+    "login": "Connexion",
+    "logout": "Déconnexion",
+    "guest": "Continuer en tant qu'invité"
+  },
     "Footer": {
       "product": "Un produit MOSIP",
       "copyRight": "© 2024 MOSIP. Tous droits réservés."
@@ -275,6 +277,41 @@
         "description2": "1. EmbeddedVC : intègre le VC complet au format JSON (code QR plus dense) pour une utilisation hors ligne.",
         "description3": "2. OnlineSharing : génère un code QR avec une URL vers le stockage VC en ligne, ce qui facilite la numérisation et le partage en ligne."
         }
+  },
+  "LoginPage": {
+    "login-title": "Connexion à votre compte Inji Web",
+    "login-description": "Bienvenue sur Inji Web ! Choisissez une option de connexion pour créer votre profil.",
+    "continue-with-google": "Continuer avec Google",
+    "logging-in": "Connexion en cours...",
+    "login-error": "Échec de la récupération du profil utilisateur"
+  },
+  "PinPage": {
+    "fetch-wallets-error": "Échec de la récupération des portefeuilles",
+    "pin-length-error": "Veuillez remplir les 6 chiffres des deux codes d'accès.",
+    "passcode-mismatch-error": "Le code d'accès ne correspond pas !",
+    "enter-name-error": "Veuillez entrer votre nom.",
+    "create-wallet-error": "Échec de la création du portefeuille",
+    "unknown-error": "Erreur inconnue",
+    "incorrect-pin-error": "PIN incorrect. Veuillez réessayer.",
+    "set-passcode": "Définir le code d'accès",
+    "enter-passcode": "Entrer le code d'accès",
+    "pin-description": "Créez votre code d'accès à 6 chiffres",
+    "pin-warning": "Assurez-vous de vous souvenir du code d'accès pour une connexion future",
+    "enter-name": "Entrez le nom",
+    "placeholder-name": "Votre nom",
+    "confirm-passcode": "Confirmer le code d'accès",
+    "submitting": "Envoi en cours...",
+    "submit": "Soumettre"
+  },
+  "SuccessLoginPage": {
+    "successful-login": "Succès !",
+    "login-success-message": "Vous avez réussi à vous connecter ! Veuillez cliquer sur 'Suivant' pour configurer votre code d'accès.",
+    "proceed": "Suivant"
+  },
+  "FailedLogin": {
+    "failure-message": "Échec de la connexion !",
+    "failure-description": "Votre demande de connexion n'a pas pu être terminée. Veuillez cliquer sur le bouton de réessayer pour vous reconnecter.",
+    "retry": "Réessayer"
   },
   "DataShareExpiryModal": {
     "title": "Validité du partage",
